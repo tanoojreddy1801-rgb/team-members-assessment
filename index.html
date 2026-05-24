@@ -1,1 +1,1295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Invincibles Online Exam</title>
 
+  <style>
+    :root {
+      --bg-1: #f8fbff;
+      --bg-2: #eef5ff;
+      --bg-3: #f9fcff;
+      --surface: rgba(255, 255, 255, 0.82);
+      --text: #24324a;
+      --text-soft: #60708d;
+      --line: rgba(186, 205, 232, 0.45);
+      --primary: #5b8def;
+      --primary-2: #7fb3ff;
+      --teal: #57c6c2;
+      --rose: #f0a8bc;
+      --amber: #efb257;
+      --green: #34a173;
+      --red: #c45d73;
+      --shadow-lg: 0 24px 60px rgba(115, 149, 199, 0.18);
+      --shadow-sm: 0 8px 20px rgba(122, 152, 199, 0.1);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(168, 202, 255, 0.26), transparent 28%),
+        radial-gradient(circle at 100% 10%, rgba(126, 215, 193, 0.22), transparent 24%),
+        radial-gradient(circle at 70% 100%, rgba(246, 183, 200, 0.18), transparent 24%),
+        linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 52%, var(--bg-3) 100%);
+      overflow-x: hidden;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      padding: 16px 26px;
+      background: rgba(255, 255, 255, 0.68);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(201, 216, 238, 0.45);
+      box-shadow: 0 8px 24px rgba(141, 169, 207, 0.08);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 46px;
+      height: 46px;
+      border-radius: 16px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.65)),
+        linear-gradient(135deg, var(--primary), var(--teal));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+      flex: 0 0 auto;
+    }
+
+    .brand-mark::after {
+      content: "EX";
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: #3b67b7;
+      font-size: 15px;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .logo {
+      font-size: 26px;
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: 0;
+      background: linear-gradient(90deg, #4d7fe5, #61b7d5, #4d7fe5);
+      background-size: 200% auto;
+      color: transparent;
+      background-clip: text;
+      -webkit-background-clip: text;
+      animation: shimmer 5s linear infinite;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .logo-sub {
+      color: var(--text-soft);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+
+    .nav-right {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav-pill {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(197, 214, 238, 0.5);
+      color: var(--text-soft);
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: var(--shadow-sm);
+      display: none;
+      max-width: 260px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 0% center; }
+      100% { background-position: 200% center; }
+    }
+
+    .container {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 28px 22px 40px;
+    }
+
+    .panel {
+      position: relative;
+      background: var(--surface);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: var(--shadow-lg);
+      padding: 26px;
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 6px;
+      background: linear-gradient(90deg, rgba(91,141,239,0.85), rgba(87,198,194,0.75), rgba(246,183,200,0.7));
+    }
+
+    .hero-login {
+      max-width: 520px;
+      margin: 50px auto 0;
+      padding-top: 34px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .section-head-left {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+      font-weight: 800;
+    }
+
+    h1 { font-size: 30px; }
+    h2 { font-size: 22px; }
+    h3 { font-size: 17px; }
+
+    .subtle {
+      color: var(--text-soft);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .chip {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.88), rgba(246,250,255,0.75));
+      border: 1px solid rgba(197, 214, 238, 0.55);
+      color: #5f7396;
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: var(--shadow-sm);
+      white-space: nowrap;
+    }
+
+    input, button, textarea, select {
+      font: inherit;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      border: 1px solid rgba(190, 208, 233, 0.62);
+      background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(248,251,255,0.92));
+      border-radius: 16px;
+      padding: 0 14px;
+      color: var(--text);
+      outline: none;
+      transition: 0.22s ease;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.78);
+    }
+
+    input, select { height: 48px; }
+
+    textarea {
+      min-height: 150px;
+      padding: 14px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: rgba(91,141,239,0.78);
+      box-shadow:
+        0 0 0 4px rgba(126, 177, 255, 0.14),
+        0 10px 24px rgba(141, 175, 224, 0.12);
+    }
+
+    button {
+      height: 46px;
+      padding: 0 18px;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: transform 0.2s ease, filter 0.2s ease, opacity 0.2s ease;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.68;
+      transform: none;
+    }
+
+    .btn-primary,
+    .nav-btn {
+      color: #fff;
+      background: linear-gradient(135deg, #5b8def, #78adff);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-secondary {
+      color: #4e668a;
+      background: rgba(255, 255, 255, 0.76);
+      border: 1px solid rgba(197, 214, 238, 0.65);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-danger {
+      color: #fff;
+      background: linear-gradient(135deg, #c45d73, #ee8ca1);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-primary:hover,
+    .btn-secondary:hover,
+    .btn-danger:hover,
+    .nav-btn:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.03);
+    }
+
+    .nav-btn { display: none; }
+
+    .status-message {
+      margin-top: 14px;
+      min-height: 20px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .status-message.error { color: var(--red); }
+    .status-message.success { color: #2f8d6a; }
+
+    .info-box {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(197, 214, 238, 0.55);
+      color: var(--text-soft);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .hidden { display: none !important; }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 360px minmax(0, 1fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .stack {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding: 6px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.58);
+      border: 1px solid rgba(197, 214, 238, 0.55);
+    }
+
+    .tab-btn {
+      height: 40px;
+      border-radius: 13px;
+      background: transparent;
+      color: var(--text-soft);
+      box-shadow: none;
+      padding: 0 10px;
+    }
+
+    .tab-btn.active {
+      color: #fff;
+      background: linear-gradient(135deg, #5b8def, #78adff);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .mini-card,
+    .question-card,
+    .response-card {
+      border-radius: 8px;
+      background: rgba(255,255,255,0.74);
+      border: 1px solid rgba(197, 214, 238, 0.56);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .mini-card {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .metric {
+      font-size: 30px;
+      font-weight: 800;
+      color: #426fc3;
+      line-height: 1;
+    }
+
+    .question-card {
+      padding: 18px;
+    }
+
+    .question-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .question-title {
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
+    .option-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .option-item {
+      display: grid;
+      grid-template-columns: 20px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+      padding: 12px;
+      border-radius: 8px;
+      background: rgba(248, 251, 255, 0.82);
+      border: 1px solid rgba(197, 214, 238, 0.52);
+      color: var(--text);
+      line-height: 1.45;
+    }
+
+    .option-item input {
+      width: 18px;
+      height: 18px;
+      margin: 2px 0 0;
+      padding: 0;
+      box-shadow: none;
+    }
+
+    .exam-shell {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 280px;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .exam-sidebar {
+      position: sticky;
+      top: 96px;
+    }
+
+    .progress-track {
+      height: 10px;
+      background: rgba(197, 214, 238, 0.58);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--teal));
+      transition: width 0.2s ease;
+    }
+
+    .response-card {
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .response-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .score-pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      color: #fff;
+      background: linear-gradient(135deg, var(--green), var(--teal));
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: 8px;
+      border: 1px solid rgba(197, 214, 238, 0.56);
+      background: rgba(255,255,255,0.6);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 720px;
+      font-size: 13px;
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid rgba(197, 214, 238, 0.42);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: #52698e;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      background: rgba(248,251,255,0.86);
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    .correct { color: #2f8d6a; font-weight: 800; }
+    .wrong { color: var(--red); font-weight: 800; }
+
+    .sample-code {
+      margin: 0;
+      padding: 14px;
+      border-radius: 8px;
+      background: rgba(36, 50, 74, 0.06);
+      color: #435675;
+      overflow-x: auto;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .file-input {
+      padding: 11px;
+      height: auto;
+    }
+
+    @media (max-width: 980px) {
+      .dashboard-grid,
+      .exam-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .exam-sidebar {
+        position: static;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .container { padding: 16px 14px 28px; }
+      .navbar {
+        padding: 14px;
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      .nav-right {
+        width: 100%;
+        justify-content: flex-start;
+      }
+      .nav-pill { max-width: 100%; }
+      .panel { padding: 18px; border-radius: 22px; }
+      .logo { font-size: 21px; }
+      .hero-login { margin-top: 24px; }
+      .section-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      .tabs { grid-template-columns: 1fr; }
+      button { width: 100%; }
+      .response-head { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <div class="brand">
+      <div class="brand-mark"></div>
+      <div class="brand-text">
+        <span class="logo">Invincibles Online Exam</span>
+        <span class="logo-sub">Admin Uploads | Users Attend | Responses Stored</span>
+      </div>
+    </div>
+
+    <div class="nav-right">
+      <div id="navRole" class="nav-pill"></div>
+      <div id="navUser" class="nav-pill"></div>
+      <button id="logoutBtn" class="nav-btn">Logout</button>
+    </div>
+  </div>
+
+  <main class="container">
+    <section id="loginView" class="panel hero-login">
+      <div class="section-head">
+        <div class="section-head-left">
+          <h1>Welcome Back</h1>
+          <div class="subtle">Login with Firebase credentials. Admin users can upload question JSON and review submitted responses.</div>
+        </div>
+        <div class="chip">Secure Login</div>
+      </div>
+
+      <div class="stack">
+        <input id="loginEmail" type="email" autocomplete="email" placeholder="Email" />
+        <input id="loginPass" type="password" autocomplete="current-password" placeholder="Password" />
+        <button id="loginBtn" class="btn-primary">Login</button>
+      </div>
+      <div id="loginStatus" class="status-message"></div>
+
+      <div class="info-box">
+        The tool uses Firebase Authentication for login and Firestore for exams and submissions. Admin access is read from the <strong>admins</strong> collection or the email allowlist in this file.
+      </div>
+    </section>
+
+    <section id="adminView" class="hidden">
+      <div class="dashboard-grid">
+        <aside class="panel stack">
+          <div class="section-head">
+            <div class="section-head-left">
+              <h2>Admin</h2>
+              <div class="subtle">Upload question JSON, publish tests, and review submissions.</div>
+            </div>
+          </div>
+
+          <div class="tabs" aria-label="Admin sections">
+            <button class="tab-btn active" data-admin-tab="upload">Upload</button>
+            <button class="tab-btn" data-admin-tab="responses">Responses</button>
+            <button class="tab-btn" data-admin-tab="settings">JSON</button>
+          </div>
+
+          <div class="mini-card">
+            <div class="subtle">Published tests</div>
+            <div id="adminExamCount" class="metric">0</div>
+          </div>
+          <div class="mini-card">
+            <div class="subtle">Total submissions</div>
+            <div id="adminResponseCount" class="metric">0</div>
+          </div>
+          <button id="refreshAdminBtn" class="btn-secondary">Refresh</button>
+        </aside>
+
+        <section class="panel">
+          <div id="adminUploadTab" class="stack">
+            <div class="section-head">
+              <div class="section-head-left">
+                <h1>Upload Exam</h1>
+                <div class="subtle">Choose a JSON file or paste JSON below, then publish it for users.</div>
+              </div>
+              <div class="chip">Firestore</div>
+            </div>
+
+            <div class="row">
+              <input id="examTitle" type="text" placeholder="Exam title" />
+              <input id="examDuration" type="number" min="1" placeholder="Duration in minutes" />
+            </div>
+            <input id="jsonFile" class="file-input" type="file" accept=".json,application/json" />
+            <textarea id="jsonText" spellcheck="false" placeholder="Paste exam JSON here"></textarea>
+            <div class="row">
+              <button id="publishExamBtn" class="btn-primary">Publish Exam</button>
+              <button id="loadSampleBtn" class="btn-secondary">Load Sample</button>
+            </div>
+            <div id="adminStatus" class="status-message"></div>
+          </div>
+
+          <div id="adminResponsesTab" class="stack hidden">
+            <div class="section-head">
+              <div class="section-head-left">
+                <h1>User Responses</h1>
+                <div class="subtle">Review scores and question-wise answers after users submit tests.</div>
+              </div>
+              <select id="responseExamFilter" aria-label="Filter responses by exam">
+                <option value="">All exams</option>
+              </select>
+            </div>
+            <div id="responsesList" class="stack"></div>
+          </div>
+
+          <div id="adminSettingsTab" class="stack hidden">
+            <div class="section-head">
+              <div class="section-head-left">
+                <h1>Question JSON Format</h1>
+                <div class="subtle">Each question needs an id, question text, options, and answer. Marks are optional.</div>
+              </div>
+            </div>
+            <pre class="sample-code" id="sampleJsonBlock"></pre>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section id="userView" class="hidden">
+      <div id="examPicker" class="panel stack">
+        <div class="section-head">
+          <div class="section-head-left">
+            <h1>Available Exams</h1>
+            <div class="subtle">Select a published test and submit your answers once complete.</div>
+          </div>
+          <button id="refreshUserBtn" class="btn-secondary">Refresh</button>
+        </div>
+        <div id="examList" class="stack"></div>
+      </div>
+
+      <div id="examRunner" class="hidden exam-shell">
+        <section class="panel stack">
+          <div class="section-head">
+            <div class="section-head-left">
+              <h1 id="activeExamTitle">Exam</h1>
+              <div id="activeExamMeta" class="subtle"></div>
+            </div>
+            <div id="timerChip" class="chip">--:--</div>
+          </div>
+          <div id="questionList" class="stack"></div>
+        </section>
+
+        <aside class="panel exam-sidebar stack">
+          <h2>Progress</h2>
+          <div class="progress-track"><div id="progressFill" class="progress-fill"></div></div>
+          <div id="progressText" class="subtle">0 answered</div>
+          <button id="submitExamBtn" class="btn-primary">Submit Test</button>
+          <button id="cancelExamBtn" class="btn-secondary">Back to Exams</button>
+          <div id="userStatus" class="status-message"></div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import {
+      getFirestore,
+      collection,
+      doc,
+      getDoc,
+      getDocs,
+      addDoc,
+      query,
+      orderBy,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCsxAw40sFLw00PtEas3cvzRMEjkDZ9NJE",
+      authDomain: "client-tracker-tool-5bdf6.firebaseapp.com",
+      projectId: "client-tracker-tool-5bdf6"
+    };
+
+    const ADMIN_EMAILS = [
+      "admin@example.com"
+    ];
+
+    const SAMPLE_EXAM = {
+      title: "Sample Tax Knowledge Test",
+      durationMinutes: 20,
+      questions: [
+        {
+          id: "q1",
+          question: "Which form is commonly used for filing individual income tax returns in India?",
+          options: ["GSTR-1", "ITR", "TDS-26Q", "Form 16A"],
+          answer: "ITR",
+          marks: 1
+        },
+        {
+          id: "q2",
+          question: "What does GST stand for?",
+          options: ["General Sales Tariff", "Goods and Services Tax", "Government Service Token", "Gross Supply Tax"],
+          answer: "Goods and Services Tax",
+          marks: 1
+        }
+      ]
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const els = {
+      loginView: document.getElementById("loginView"),
+      adminView: document.getElementById("adminView"),
+      userView: document.getElementById("userView"),
+      navUser: document.getElementById("navUser"),
+      navRole: document.getElementById("navRole"),
+      logoutBtn: document.getElementById("logoutBtn"),
+      loginBtn: document.getElementById("loginBtn"),
+      loginEmail: document.getElementById("loginEmail"),
+      loginPass: document.getElementById("loginPass"),
+      loginStatus: document.getElementById("loginStatus"),
+      adminStatus: document.getElementById("adminStatus"),
+      userStatus: document.getElementById("userStatus"),
+      examTitle: document.getElementById("examTitle"),
+      examDuration: document.getElementById("examDuration"),
+      jsonFile: document.getElementById("jsonFile"),
+      jsonText: document.getElementById("jsonText"),
+      publishExamBtn: document.getElementById("publishExamBtn"),
+      loadSampleBtn: document.getElementById("loadSampleBtn"),
+      refreshAdminBtn: document.getElementById("refreshAdminBtn"),
+      refreshUserBtn: document.getElementById("refreshUserBtn"),
+      adminExamCount: document.getElementById("adminExamCount"),
+      adminResponseCount: document.getElementById("adminResponseCount"),
+      responseExamFilter: document.getElementById("responseExamFilter"),
+      responsesList: document.getElementById("responsesList"),
+      examList: document.getElementById("examList"),
+      examPicker: document.getElementById("examPicker"),
+      examRunner: document.getElementById("examRunner"),
+      activeExamTitle: document.getElementById("activeExamTitle"),
+      activeExamMeta: document.getElementById("activeExamMeta"),
+      timerChip: document.getElementById("timerChip"),
+      questionList: document.getElementById("questionList"),
+      progressFill: document.getElementById("progressFill"),
+      progressText: document.getElementById("progressText"),
+      submitExamBtn: document.getElementById("submitExamBtn"),
+      cancelExamBtn: document.getElementById("cancelExamBtn"),
+      sampleJsonBlock: document.getElementById("sampleJsonBlock")
+    };
+
+    let currentUser = null;
+    let currentRole = "user";
+    let exams = [];
+    let responses = [];
+    let activeExam = null;
+    let answers = {};
+    let timerInterval = null;
+    let endAt = null;
+
+    els.sampleJsonBlock.textContent = JSON.stringify(SAMPLE_EXAM, null, 2);
+
+    function setStatus(el, message = "", type = "") {
+      el.textContent = message;
+      el.className = "status-message" + (type ? ` ${type}` : "");
+    }
+
+    function showOnly(view) {
+      [els.loginView, els.adminView, els.userView].forEach((el) => el.classList.add("hidden"));
+      view.classList.remove("hidden");
+    }
+
+    function setLoggedOutState() {
+      currentUser = null;
+      currentRole = "user";
+      els.navUser.style.display = "none";
+      els.navRole.style.display = "none";
+      els.logoutBtn.style.display = "none";
+      showOnly(els.loginView);
+    }
+
+    function setLoggedInState(user, role) {
+      els.navUser.textContent = user.email;
+      els.navRole.textContent = role === "admin" ? "Admin Access" : "User Access";
+      els.navUser.style.display = "block";
+      els.navRole.style.display = "block";
+      els.logoutBtn.style.display = "inline-block";
+      showOnly(role === "admin" ? els.adminView : els.userView);
+    }
+
+    function setLoading(button, isLoading, loadingText, defaultText) {
+      button.disabled = isLoading;
+      button.textContent = isLoading ? loadingText : defaultText;
+    }
+
+    function normalizeQuestion(raw, index) {
+      const id = String(raw.id || `q${index + 1}`).trim();
+      const question = String(raw.question || raw.text || "").trim();
+      const options = Array.isArray(raw.options) ? raw.options.map((option) => String(option)) : [];
+      const answer = String(raw.answer ?? raw.correctAnswer ?? "").trim();
+      const marks = Number(raw.marks || 1);
+
+      if (!question) throw new Error(`Question ${index + 1} is missing question text.`);
+      if (options.length < 2) throw new Error(`Question ${index + 1} must have at least two options.`);
+      if (!answer) throw new Error(`Question ${index + 1} is missing answer.`);
+      if (!options.includes(answer)) throw new Error(`Question ${index + 1} answer must match one option exactly.`);
+
+      return { id, question, options, answer, marks: Number.isFinite(marks) && marks > 0 ? marks : 1 };
+    }
+
+    function parseExamJson(text) {
+      const parsed = JSON.parse(text);
+      const source = Array.isArray(parsed) ? { questions: parsed } : parsed;
+      if (!Array.isArray(source.questions) || source.questions.length === 0) {
+        throw new Error("JSON must contain a non-empty questions array.");
+      }
+
+      return {
+        title: String(source.title || els.examTitle.value || "Untitled Exam").trim(),
+        durationMinutes: Number(source.durationMinutes || els.examDuration.value || 30),
+        questions: source.questions.map(normalizeQuestion)
+      };
+    }
+
+    async function isAdmin(user) {
+      if (!user) return false;
+      if (ADMIN_EMAILS.includes(user.email.toLowerCase())) return true;
+
+      try {
+        const adminDoc = await getDoc(doc(db, "admins", user.uid));
+        return adminDoc.exists() && adminDoc.data().active !== false;
+      } catch (error) {
+        console.warn("Could not read admin role", error);
+        return false;
+      }
+    }
+
+    async function doLogin() {
+      const email = els.loginEmail.value.trim().toLowerCase();
+      const password = els.loginPass.value;
+
+      if (!email || !password) {
+        setStatus(els.loginStatus, "Please enter both email and password.", "error");
+        return;
+      }
+
+      try {
+        setLoading(els.loginBtn, true, "Signing In...", "Login");
+        setStatus(els.loginStatus, "Logging in...", "success");
+        await signInWithEmailAndPassword(auth, email, password);
+      } catch (error) {
+        setStatus(els.loginStatus, error.message || "Login failed.", "error");
+        setLoading(els.loginBtn, false, "Signing In...", "Login");
+      }
+    }
+
+    async function doLogout() {
+      try {
+        stopTimer();
+        await signOut(auth);
+        setStatus(els.loginStatus, "Logged out successfully.", "success");
+      } catch (error) {
+        setStatus(els.loginStatus, error.message || "Logout failed.", "error");
+      }
+    }
+
+    async function publishExam() {
+      try {
+        setLoading(els.publishExamBtn, true, "Publishing...", "Publish Exam");
+        setStatus(els.adminStatus, "Validating JSON...", "success");
+        const exam = parseExamJson(els.jsonText.value);
+        const title = els.examTitle.value.trim() || exam.title;
+        const duration = Number(els.examDuration.value || exam.durationMinutes || 30);
+
+        await addDoc(collection(db, "exams"), {
+          title,
+          durationMinutes: Number.isFinite(duration) && duration > 0 ? duration : 30,
+          questions: exam.questions,
+          createdBy: currentUser.uid,
+          createdByEmail: currentUser.email,
+          createdAt: serverTimestamp(),
+          active: true
+        });
+
+        els.examTitle.value = "";
+        els.examDuration.value = "";
+        els.jsonFile.value = "";
+        els.jsonText.value = "";
+        setStatus(els.adminStatus, "Exam published successfully.", "success");
+        await loadAdminData();
+      } catch (error) {
+        setStatus(els.adminStatus, error.message || "Could not publish exam.", "error");
+      } finally {
+        setLoading(els.publishExamBtn, false, "Publishing...", "Publish Exam");
+      }
+    }
+
+    async function loadExams() {
+      const snapshot = await getDocs(collection(db, "exams"));
+      exams = snapshot.docs
+        .map((examDoc) => ({ id: examDoc.id, ...examDoc.data() }))
+        .filter((exam) => exam.active !== false)
+        .sort((a, b) => {
+          const aTime = typeof a.createdAt?.toMillis === "function" ? a.createdAt.toMillis() : 0;
+          const bTime = typeof b.createdAt?.toMillis === "function" ? b.createdAt.toMillis() : 0;
+          return bTime - aTime;
+        });
+      return exams;
+    }
+
+    async function loadResponses() {
+      const snapshot = await getDocs(query(collection(db, "responses"), orderBy("submittedAt", "desc")));
+      responses = snapshot.docs.map((responseDoc) => ({ id: responseDoc.id, ...responseDoc.data() }));
+      return responses;
+    }
+
+    async function loadAdminData() {
+      try {
+        await Promise.all([loadExams(), loadResponses()]);
+        els.adminExamCount.textContent = exams.length;
+        els.adminResponseCount.textContent = responses.length;
+        renderResponseFilter();
+        renderResponses();
+      } catch (error) {
+        setStatus(els.adminStatus, error.message || "Could not load admin data.", "error");
+      }
+    }
+
+    async function loadUserData() {
+      try {
+        await loadExams();
+        renderExamList();
+      } catch (error) {
+        els.examList.innerHTML = `<div class="info-box">Unable to load exams: ${escapeHtml(error.message)}</div>`;
+      }
+    }
+
+    function renderResponseFilter() {
+      const current = els.responseExamFilter.value;
+      els.responseExamFilter.innerHTML = `<option value="">All exams</option>`;
+      exams.forEach((exam) => {
+        const option = document.createElement("option");
+        option.value = exam.id;
+        option.textContent = exam.title;
+        els.responseExamFilter.appendChild(option);
+      });
+      els.responseExamFilter.value = current;
+    }
+
+    function renderResponses() {
+      const examId = els.responseExamFilter.value;
+      const filtered = examId ? responses.filter((response) => response.examId === examId) : responses;
+
+      if (filtered.length === 0) {
+        els.responsesList.innerHTML = `<div class="info-box">No submissions found yet.</div>`;
+        return;
+      }
+
+      els.responsesList.innerHTML = filtered.map((response) => {
+        const rows = (response.answers || []).map((answer, index) => `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${escapeHtml(answer.question)}</td>
+            <td>${escapeHtml(answer.selected || "Not answered")}</td>
+            <td>${escapeHtml(answer.correctAnswer)}</td>
+            <td class="${answer.isCorrect ? "correct" : "wrong"}">${answer.isCorrect ? "Correct" : "Wrong"}</td>
+          </tr>
+        `).join("");
+
+        return `
+          <article class="response-card">
+            <div class="response-head">
+              <div>
+                <h3>${escapeHtml(response.userEmail || "Unknown user")}</h3>
+                <div class="subtle">${escapeHtml(response.examTitle || "Untitled Exam")} | ${formatDate(response.submittedAt)}</div>
+              </div>
+              <div class="score-pill">${response.score || 0}/${response.totalMarks || 0}</div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Question</th>
+                    <th>User Answer</th>
+                    <th>Correct Answer</th>
+                    <th>Result</th>
+                  </tr>
+                </thead>
+                <tbody>${rows}</tbody>
+              </table>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function renderExamList() {
+      stopTimer();
+      els.examRunner.classList.add("hidden");
+      els.examPicker.classList.remove("hidden");
+      setStatus(els.userStatus, "");
+
+      if (exams.length === 0) {
+        els.examList.innerHTML = `<div class="info-box">No active exams are available right now.</div>`;
+        return;
+      }
+
+      els.examList.innerHTML = exams.map((exam) => `
+        <article class="mini-card">
+          <div class="response-head">
+            <div>
+              <h3>${escapeHtml(exam.title)}</h3>
+              <div class="subtle">${exam.questions?.length || 0} questions | ${exam.durationMinutes || 30} minutes</div>
+            </div>
+            <button class="btn-primary" data-start-exam="${exam.id}">Start</button>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function startExam(examId) {
+      activeExam = exams.find((exam) => exam.id === examId);
+      if (!activeExam) return;
+
+      answers = {};
+      els.examPicker.classList.add("hidden");
+      els.examRunner.classList.remove("hidden");
+      els.activeExamTitle.textContent = activeExam.title;
+      els.activeExamMeta.textContent = `${activeExam.questions.length} questions | ${activeExam.durationMinutes || 30} minutes`;
+      els.questionList.innerHTML = activeExam.questions.map((question, index) => renderQuestion(question, index)).join("");
+      updateProgress();
+      startTimer(Number(activeExam.durationMinutes || 30));
+    }
+
+    function renderQuestion(question, index) {
+      const options = question.options.map((option) => `
+        <label class="option-item">
+          <input type="radio" name="${escapeAttr(question.id)}" value="${escapeAttr(option)}" data-question-id="${escapeAttr(question.id)}" />
+          <span>${escapeHtml(option)}</span>
+        </label>
+      `).join("");
+
+      return `
+        <article class="question-card">
+          <div class="question-top">
+            <div class="question-title">${index + 1}. ${escapeHtml(question.question)}</div>
+            <div class="chip">${question.marks || 1} mark${Number(question.marks || 1) === 1 ? "" : "s"}</div>
+          </div>
+          <div class="option-list">${options}</div>
+        </article>
+      `;
+    }
+
+    function updateProgress() {
+      const total = activeExam?.questions?.length || 0;
+      const answered = Object.keys(answers).length;
+      const percent = total ? Math.round((answered / total) * 100) : 0;
+      els.progressFill.style.width = `${percent}%`;
+      els.progressText.textContent = `${answered} of ${total} answered`;
+    }
+
+    function startTimer(minutes) {
+      stopTimer();
+      endAt = Date.now() + minutes * 60 * 1000;
+      updateTimer();
+      timerInterval = window.setInterval(updateTimer, 1000);
+    }
+
+    function updateTimer() {
+      const remaining = Math.max(0, endAt - Date.now());
+      const minutes = Math.floor(remaining / 60000);
+      const seconds = Math.floor((remaining % 60000) / 1000);
+      els.timerChip.textContent = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+      if (remaining <= 0) {
+        stopTimer();
+        submitExam(true);
+      }
+    }
+
+    function stopTimer() {
+      if (timerInterval) window.clearInterval(timerInterval);
+      timerInterval = null;
+    }
+
+    async function submitExam(autoSubmit = false) {
+      if (!activeExam || !currentUser) return;
+
+      const unanswered = activeExam.questions.length - Object.keys(answers).length;
+      if (!autoSubmit && unanswered > 0 && !window.confirm(`${unanswered} question(s) are unanswered. Submit anyway?`)) {
+        return;
+      }
+
+      try {
+        setLoading(els.submitExamBtn, true, "Submitting...", "Submit Test");
+        const evaluated = activeExam.questions.map((question) => {
+          const selected = answers[question.id] || "";
+          const isCorrect = selected === question.answer;
+          return {
+            questionId: question.id,
+            question: question.question,
+            selected,
+            correctAnswer: question.answer,
+            isCorrect,
+            marks: question.marks || 1,
+            scored: isCorrect ? question.marks || 1 : 0
+          };
+        });
+        const score = evaluated.reduce((sum, answer) => sum + answer.scored, 0);
+        const totalMarks = activeExam.questions.reduce((sum, question) => sum + Number(question.marks || 1), 0);
+
+        await addDoc(collection(db, "responses"), {
+          examId: activeExam.id,
+          examTitle: activeExam.title,
+          userId: currentUser.uid,
+          userEmail: currentUser.email,
+          answers: evaluated,
+          score,
+          totalMarks,
+          autoSubmitted: autoSubmit,
+          submittedAt: serverTimestamp()
+        });
+
+        stopTimer();
+        setStatus(els.userStatus, `Submitted successfully. Score: ${score}/${totalMarks}`, "success");
+        window.alert(`Submitted successfully. Score: ${score}/${totalMarks}`);
+        activeExam = null;
+        renderExamList();
+      } catch (error) {
+        setStatus(els.userStatus, error.message || "Could not submit test.", "error");
+      } finally {
+        setLoading(els.submitExamBtn, false, "Submitting...", "Submit Test");
+      }
+    }
+
+    function switchAdminTab(tabName) {
+      document.querySelectorAll("[data-admin-tab]").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.adminTab === tabName);
+      });
+      document.getElementById("adminUploadTab").classList.toggle("hidden", tabName !== "upload");
+      document.getElementById("adminResponsesTab").classList.toggle("hidden", tabName !== "responses");
+      document.getElementById("adminSettingsTab").classList.toggle("hidden", tabName !== "settings");
+      if (tabName === "responses") loadAdminData();
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      }[char]));
+    }
+
+    function escapeAttr(value) {
+      return escapeHtml(value).replace(/`/g, "&#096;");
+    }
+
+    function formatDate(timestamp) {
+      if (!timestamp) return "Submission time pending";
+      const date = typeof timestamp.toDate === "function" ? timestamp.toDate() : new Date(timestamp);
+      return date.toLocaleString();
+    }
+
+    els.loginBtn.addEventListener("click", doLogin);
+    els.logoutBtn.addEventListener("click", doLogout);
+    els.publishExamBtn.addEventListener("click", publishExam);
+    els.refreshAdminBtn.addEventListener("click", loadAdminData);
+    els.refreshUserBtn.addEventListener("click", loadUserData);
+    els.responseExamFilter.addEventListener("change", renderResponses);
+    els.loadSampleBtn.addEventListener("click", () => {
+      els.examTitle.value = SAMPLE_EXAM.title;
+      els.examDuration.value = SAMPLE_EXAM.durationMinutes;
+      els.jsonText.value = JSON.stringify(SAMPLE_EXAM, null, 2);
+      setStatus(els.adminStatus, "Sample JSON loaded.", "success");
+    });
+
+    [els.loginEmail, els.loginPass].forEach((el) => {
+      el.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") doLogin();
+      });
+    });
+
+    els.jsonFile.addEventListener("change", async () => {
+      const file = els.jsonFile.files?.[0];
+      if (!file) return;
+      els.jsonText.value = await file.text();
+      setStatus(els.adminStatus, `${file.name} loaded.`, "success");
+    });
+
+    document.querySelectorAll("[data-admin-tab]").forEach((btn) => {
+      btn.addEventListener("click", () => switchAdminTab(btn.dataset.adminTab));
+    });
+
+    els.examList.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-start-exam]");
+      if (button) startExam(button.dataset.startExam);
+    });
+
+    els.questionList.addEventListener("change", (event) => {
+      if (event.target.matches("input[type='radio'][data-question-id]")) {
+        answers[event.target.dataset.questionId] = event.target.value;
+        updateProgress();
+      }
+    });
+
+    els.submitExamBtn.addEventListener("click", () => submitExam(false));
+    els.cancelExamBtn.addEventListener("click", renderExamList);
+
+    onAuthStateChanged(auth, async (user) => {
+      setLoading(els.loginBtn, false, "Signing In...", "Login");
+      if (!user) {
+        setLoggedOutState();
+        return;
+      }
+
+      currentUser = user;
+      const admin = await isAdmin(user);
+      currentRole = admin ? "admin" : "user";
+      setLoggedInState(user, currentRole);
+      setStatus(els.loginStatus, "Login successful.", "success");
+
+      if (admin) {
+        await loadAdminData();
+      } else {
+        await loadUserData();
+      }
+    });
+  </script>
+</body>
+</html>
