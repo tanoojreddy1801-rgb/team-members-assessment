@@ -602,7 +602,7 @@
       <div id="loginStatus" class="status-message"></div>
 
       <div class="info-box">
-        The tool uses Firebase Authentication for login and Firestore for exams and submissions. Admin access is read from the <strong>admins</strong> collection or the email allowlist in this file.
+        The tool uses Firebase Authentication for login and Firestore for exams and submissions. Admin access is read from the <strong>roles</strong> collection where the document id is the user's email.
       </div>
     </section>
 
@@ -745,7 +745,7 @@
     };
 
     const ADMIN_EMAILS = [
-      "admin@example.com"
+      "admin@invinciblescotax.info"
     ];
 
     const SAMPLE_EXAM = {
@@ -887,11 +887,15 @@
 
     async function isAdmin(user) {
       if (!user) return false;
-      if (ADMIN_EMAILS.includes(user.email.toLowerCase())) return true;
+      const email = user.email.toLowerCase();
+      if (ADMIN_EMAILS.includes(email)) return true;
 
       try {
-        const adminDoc = await getDoc(doc(db, "admins", user.uid));
-        return adminDoc.exists() && adminDoc.data().active !== false;
+        const roleDoc = await getDoc(doc(db, "roles", email));
+        if (!roleDoc.exists()) return false;
+
+        const roleData = roleDoc.data();
+        return roleData.active !== false && String(roleData.role || "").toLowerCase() === "admin";
       } catch (error) {
         console.warn("Could not read admin role", error);
         return false;
