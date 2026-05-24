@@ -393,6 +393,29 @@
       padding: 18px;
     }
 
+    .case-context {
+      margin-bottom: 14px;
+      padding: 14px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(91,141,239,0.08), rgba(87,198,194,0.08));
+      border: 1px solid rgba(197, 214, 238, 0.55);
+    }
+
+    .case-title {
+      margin-bottom: 6px;
+      color: #426fc3;
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .case-scenario {
+      color: var(--text-soft);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
     .question-top {
       display: flex;
       align-items: flex-start;
@@ -651,7 +674,7 @@
             <textarea id="jsonText" spellcheck="false" placeholder="Paste exam JSON here"></textarea>
             <div class="row">
               <button id="publishExamBtn" class="btn-primary">Publish Exam</button>
-              <button id="loadSampleBtn" class="btn-secondary">Load Sample</button>
+              <button id="loadSampleBtn" class="btn-secondary">Load Format</button>
             </div>
             <div id="adminStatus" class="status-message"></div>
           </div>
@@ -673,7 +696,7 @@
             <div class="section-head">
               <div class="section-head-left">
                 <h1>Question JSON Format</h1>
-                <div class="subtle">Each question needs an id, question text, options, and answer. Marks are optional.</div>
+                <div class="subtle">Uploads must use caseStudies with title, scenario, questions, options, and answer.</div>
               </div>
             </div>
             <pre class="sample-code" id="sampleJsonBlock"></pre>
@@ -748,23 +771,22 @@
       "admin@invinciblescotax.info"
     ];
 
-    const SAMPLE_EXAM = {
-      title: "Sample Tax Knowledge Test",
-      durationMinutes: 20,
-      questions: [
+    const EXAM_JSON_FORMAT = {
+      title: "Exam Title",
+      totalCaseStudies: 1,
+      totalQuestions: 1,
+      caseStudies: [
         {
-          id: "q1",
-          question: "Which form is commonly used for filing individual income tax returns in India?",
-          options: ["GSTR-1", "ITR", "TDS-26Q", "Form 16A"],
-          answer: "ITR",
-          marks: 1
-        },
-        {
-          id: "q2",
-          question: "What does GST stand for?",
-          options: ["General Sales Tariff", "Goods and Services Tax", "Government Service Token", "Gross Supply Tax"],
-          answer: "Goods and Services Tax",
-          marks: 1
+          id: 1,
+          title: "Case Study Title",
+          scenario: "Case study scenario shown to the test taker.",
+          questions: [
+            {
+              question: "Question text",
+              options: ["Option A", "Option B", "Option C", "Option D"],
+              answer: "Option A"
+            }
+          ]
         }
       ]
     };
@@ -821,7 +843,7 @@
     let timerInterval = null;
     let endAt = null;
 
-    els.sampleJsonBlock.textContent = JSON.stringify(SAMPLE_EXAM, null, 2);
+    els.sampleJsonBlock.textContent = JSON.stringify(EXAM_JSON_FORMAT, null, 2);
 
     function setStatus(el, message = "", type = "") {
       el.textContent = message;
@@ -856,32 +878,77 @@
       button.textContent = isLoading ? loadingText : defaultText;
     }
 
-    function normalizeQuestion(raw, index) {
-      const id = String(raw.id || `q${index + 1}`).trim();
+    function normalizeQuestion(raw, questionIndex, caseStudy, caseIndex) {
+      const id = `case-${caseStudy.id}-q-${questionIndex + 1}`;
       const question = String(raw.question || raw.text || "").trim();
       const options = Array.isArray(raw.options) ? raw.options.map((option) => String(option)) : [];
-      const answer = String(raw.answer ?? raw.correctAnswer ?? "").trim();
-      const marks = Number(raw.marks || 1);
+      const answer = String(raw.answer ?? "").trim();
+      const marks = 1;
 
-      if (!question) throw new Error(`Question ${index + 1} is missing question text.`);
-      if (options.length < 2) throw new Error(`Question ${index + 1} must have at least two options.`);
-      if (!answer) throw new Error(`Question ${index + 1} is missing answer.`);
-      if (!options.includes(answer)) throw new Error(`Question ${index + 1} answer must match one option exactly.`);
+      if (!question) throw new Error(`Case study ${caseIndex + 1}, question ${questionIndex + 1} is missing question text.`);
+      if (options.length < 2) throw new Error(`Case study ${caseIndex + 1}, question ${questionIndex + 1} must have at least two options.`);
+      if (!answer) throw new Error(`Case study ${caseIndex + 1}, question ${questionIndex + 1} is missing answer.`);
+      if (!options.includes(answer)) throw new Error(`Case study ${caseIndex + 1}, question ${questionIndex + 1} answer must match one option exactly.`);
 
-      return { id, question, options, answer, marks: Number.isFinite(marks) && marks > 0 ? marks : 1 };
+      return {
+        id,
+        caseId: String(caseStudy.id),
+        caseTitle: caseStudy.title,
+        scenario: caseStudy.scenario,
+        question,
+        options,
+        answer,
+        marks
+      };
     }
 
     function parseExamJson(text) {
       const parsed = JSON.parse(text);
-      const source = Array.isArray(parsed) ? { questions: parsed } : parsed;
-      if (!Array.isArray(source.questions) || source.questions.length === 0) {
-        throw new Error("JSON must contain a non-empty questions array.");
+      if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+        throw new Error("JSON must be an object with title, totalCaseStudies, totalQuestions, and caseStudies.");
+      }
+      if (!String(parsed.title || "").trim()) {
+        throw new Error("JSON must contain a title.");
+      }
+      if (!Number.isFinite(Number(parsed.totalCaseStudies))) {
+        throw new Error("JSON must contain numeric totalCaseStudies.");
+      }
+      if (!Number.isFinite(Number(parsed.totalQuestions))) {
+        throw new Error("JSON must contain numeric totalQuestions.");
+      }
+      if (!Array.isArray(parsed.caseStudies) || parsed.caseStudies.length === 0) {
+        throw new Error("JSON must contain a non-empty caseStudies array.");
       }
 
+      const caseStudies = parsed.caseStudies.map((caseStudy, caseIndex) => {
+        const id = String(caseStudy.id ?? "").trim();
+        const title = String(caseStudy.title || "").trim();
+        const scenario = String(caseStudy.scenario || "").trim();
+
+        if (!id) throw new Error(`Case study ${caseIndex + 1} is missing id.`);
+        if (!title) throw new Error(`Case study ${caseIndex + 1} is missing title.`);
+        if (!scenario) throw new Error(`Case study ${caseIndex + 1} is missing scenario.`);
+        if (!Array.isArray(caseStudy.questions) || caseStudy.questions.length === 0) {
+          throw new Error(`Case study ${caseIndex + 1} must contain a non-empty questions array.`);
+        }
+
+        const normalizedCase = { id, title, scenario };
+        return {
+          ...normalizedCase,
+          questions: caseStudy.questions.map((question, questionIndex) =>
+            normalizeQuestion(question, questionIndex, normalizedCase, caseIndex)
+          )
+        };
+      });
+      const questions = caseStudies.flatMap((caseStudy) => caseStudy.questions);
+
       return {
-        title: String(source.title || els.examTitle.value || "Untitled Exam").trim(),
-        durationMinutes: Number(source.durationMinutes || els.examDuration.value || 30),
-        questions: source.questions.map(normalizeQuestion)
+        title: String(parsed.title || els.examTitle.value || "Untitled Exam").trim(),
+        durationMinutes: Number(els.examDuration.value || 30),
+        totalCaseStudies: caseStudies.length,
+        totalQuestions: questions.length,
+        caseStudies,
+        questions
       };
     }
 
@@ -942,6 +1009,9 @@
         await addDoc(collection(db, "exams"), {
           title,
           durationMinutes: Number.isFinite(duration) && duration > 0 ? duration : 30,
+          totalCaseStudies: exam.totalCaseStudies,
+          totalQuestions: exam.totalQuestions,
+          caseStudies: exam.caseStudies,
           questions: exam.questions,
           createdBy: currentUser.uid,
           createdByEmail: currentUser.email,
@@ -1027,7 +1097,10 @@
         const rows = (response.answers || []).map((answer, index) => `
           <tr>
             <td>${index + 1}</td>
-            <td>${escapeHtml(answer.question)}</td>
+            <td>
+              <strong>${escapeHtml(answer.caseTitle || "")}</strong><br />
+              ${escapeHtml(answer.question)}
+            </td>
             <td>${escapeHtml(answer.selected || "Not answered")}</td>
             <td>${escapeHtml(answer.correctAnswer)}</td>
             <td class="${answer.isCorrect ? "correct" : "wrong"}">${answer.isCorrect ? "Correct" : "Wrong"}</td>
@@ -1078,7 +1151,7 @@
           <div class="response-head">
             <div>
               <h3>${escapeHtml(exam.title)}</h3>
-              <div class="subtle">${exam.questions?.length || 0} questions | ${exam.durationMinutes || 30} minutes</div>
+              <div class="subtle">${exam.totalCaseStudies || exam.caseStudies?.length || 0} case studies | ${exam.questions?.length || 0} questions | ${exam.durationMinutes || 30} minutes</div>
             </div>
             <button class="btn-primary" data-start-exam="${exam.id}">Start</button>
           </div>
@@ -1094,7 +1167,7 @@
       els.examPicker.classList.add("hidden");
       els.examRunner.classList.remove("hidden");
       els.activeExamTitle.textContent = activeExam.title;
-      els.activeExamMeta.textContent = `${activeExam.questions.length} questions | ${activeExam.durationMinutes || 30} minutes`;
+      els.activeExamMeta.textContent = `${activeExam.totalCaseStudies || activeExam.caseStudies?.length || 0} case studies | ${activeExam.questions.length} questions | ${activeExam.durationMinutes || 30} minutes`;
       els.questionList.innerHTML = activeExam.questions.map((question, index) => renderQuestion(question, index)).join("");
       updateProgress();
       startTimer(Number(activeExam.durationMinutes || 30));
@@ -1110,6 +1183,10 @@
 
       return `
         <article class="question-card">
+          <div class="case-context">
+            <div class="case-title">Case ${escapeHtml(question.caseId)}: ${escapeHtml(question.caseTitle)}</div>
+            <div class="case-scenario">${escapeHtml(question.scenario)}</div>
+          </div>
           <div class="question-top">
             <div class="question-title">${index + 1}. ${escapeHtml(question.question)}</div>
             <div class="chip">${question.marks || 1} mark${Number(question.marks || 1) === 1 ? "" : "s"}</div>
@@ -1165,6 +1242,8 @@
           const isCorrect = selected === question.answer;
           return {
             questionId: question.id,
+            caseId: question.caseId,
+            caseTitle: question.caseTitle,
             question: question.question,
             selected,
             correctAnswer: question.answer,
@@ -1237,10 +1316,10 @@
     els.refreshUserBtn.addEventListener("click", loadUserData);
     els.responseExamFilter.addEventListener("change", renderResponses);
     els.loadSampleBtn.addEventListener("click", () => {
-      els.examTitle.value = SAMPLE_EXAM.title;
-      els.examDuration.value = SAMPLE_EXAM.durationMinutes;
-      els.jsonText.value = JSON.stringify(SAMPLE_EXAM, null, 2);
-      setStatus(els.adminStatus, "Sample JSON loaded.", "success");
+      els.examTitle.value = EXAM_JSON_FORMAT.title;
+      els.examDuration.value = "";
+      els.jsonText.value = JSON.stringify(EXAM_JSON_FORMAT, null, 2);
+      setStatus(els.adminStatus, "Required JSON format loaded.", "success");
     });
 
     [els.loginEmail, els.loginPass].forEach((el) => {
